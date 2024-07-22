@@ -28,8 +28,8 @@ local function checkAndTeleport(player)
     if character and character:FindFirstChild("HumanoidRootPart") then
         local position = character.HumanoidRootPart.Position
 
-        -- 🌌 Check if the player's Y-coordinate is below -40
-        if position.Y < -40 then
+        -- 🌌 Check if the player's Y-coordinate is below -55
+        if position.Y < -55 then
             -- 🚀 Determine a safe teleport position
             local safeTeleportPosition = getSafeTeleportPosition(teleportPosition)
             -- 🌀 Teleport the player to the safe position
