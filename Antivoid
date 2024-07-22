@@ -1,0 +1,47 @@
+-- 🚀 Define the base coordinates for teleportation
+local teleportPosition = Vector3.new(-440, -22, -9)
+
+-- 🛠 Function to check for obstacles at the teleport position
+local function getSafeTeleportPosition(basePosition)
+    local rayOrigin = basePosition + Vector3.new(0, 50, 0) -- Start the raycast 50 studs above the target
+    local rayDirection = Vector3.new(0, -100, 0) -- Cast the ray downwards 100 studs
+
+    local raycastParams = RaycastParams.new()
+    raycastParams.FilterType = Enum.RaycastFilterType.Blacklist
+    raycastParams.IgnoreWater = true
+
+    local result = workspace:Raycast(rayOrigin, rayDirection, raycastParams)
+
+    if result then
+        -- 🧱 If the ray hits something, adjust the teleport position to be above the obstacle
+        return Vector3.new(basePosition.X, result.Position.Y + 5, basePosition.Z) -- Teleport 5 studs above the obstacle
+    else
+        -- 🟢 If no obstacles are detected, use the base position
+        return basePosition
+    end
+end
+
+-- 🌟 Function to check player's position and teleport if necessary
+local function checkAndTeleport(player)
+    -- 🕹 Get the player's current position
+    local character = player.Character
+    if character and character:FindFirstChild("HumanoidRootPart") then
+        local position = character.HumanoidRootPart.Position
+
+        -- 🌌 Check if the player's Y-coordinate is below -40
+        if position.Y < -40 then
+            -- 🚀 Determine a safe teleport position
+            local safeTeleportPosition = getSafeTeleportPosition(teleportPosition)
+            -- 🌀 Teleport the player to the safe position
+            character.HumanoidRootPart.CFrame = CFrame.new(safeTeleportPosition)
+        end
+    end
+end
+
+-- 🎮 Connect the function to the Heartbeat event to run every frame
+game:GetService("RunService").Heartbeat:Connect(function()
+    -- 🏃‍♂️ Loop through all players
+    for _, player in pairs(game.Players:GetPlayers()) do
+        checkAndTeleport(player)
+    end
+end)
